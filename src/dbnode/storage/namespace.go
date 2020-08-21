@@ -1379,6 +1379,7 @@ func (n *dbNamespace) Snapshot(
 	var (
 		seriesPersist int
 		multiErr      xerrors.MultiError
+		shardIDs      = make(map[uint32]struct{})
 	)
 	for _, shard := range n.OwnedShards() {
 		result, err := shard.Snapshot(blockStart, snapshotTime, snapshotPersist, nsCtx)
@@ -1389,9 +1390,13 @@ func (n *dbNamespace) Snapshot(
 		}
 
 		seriesPersist += result.SeriesPersist
+
+		shardIDs[shard.ID()] = struct{}{}
 	}
 
 	n.metrics.snapshotSeriesPersist.Inc(int64(seriesPersist))
+
+	multiErr = multiErr.Add(n.reverseIndex.Snapshot(shardIDs, blockStart, snapshotTime, snapshotPersist))
 
 	res := multiErr.FinalError()
 	n.metrics.snapshot.ReportSuccessOrError(res, n.nowFn().Sub(callStart))
