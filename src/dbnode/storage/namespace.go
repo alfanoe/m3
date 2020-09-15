@@ -114,7 +114,7 @@ type dbNamespace struct {
 	nopts              namespace.Options
 	seriesOpts         series.Options
 	nowFn              clock.NowFn
-	snapshotFilesFn    snapshotFilesFn
+	snapshotFilesFn    fs.SnapshotFilesFn
 	log                *zap.Logger
 	bootstrapState     BootstrapState
 
