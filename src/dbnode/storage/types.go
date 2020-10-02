@@ -630,7 +630,7 @@ type databaseShard interface {
 		onFlush persist.OnFlushSeries,
 	) (ShardColdFlush, error)
 
-	// Snapshot snapshot's the unflushed WarmWrites in this shard.
+	// Snapshot snapshots the unflushed WarmWrites in this shard.
 	Snapshot(
 		blockStart time.Time,
 		snapshotStart time.Time,
@@ -780,7 +780,7 @@ type NamespaceIndex interface {
 	// DebugMemorySegments allows for debugging memory segments.
 	DebugMemorySegments(opts DebugMemorySegmentsOptions) error
 
-	// Snapshot in-memory state to disk for faster bootstrapping.
+	// Snapshot in-memory index data to disk for faster bootstrapping.
 	Snapshot(
 		shards map[uint32]struct{},
 		blockStart,
